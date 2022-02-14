@@ -1,0 +1,156 @@
+<html>
+
+<head>
+    <!-- manifest -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="icons/icon-256x256.png" sizes="256x256">
+    <link rel="apple-touch-icon" href="icons/icon-384x384.png" sizes="384x384">
+    <link rel="apple-touch-icon" href="icons/icon-512x512.png" sizes="512x512">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#00D4B0">
+    <meta name="apple-mobile-web-app-title" content="Pace Calculator">
+    <meta name="msapplication-TileImage" content="icons/icon-192x192.png">
+    <meta name="msapplication-TileColor" content="#fff">
+    <meta name="theme-color" content="#2a2928">
+
+    <!-- viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+         text-align: center;
+            font-size: 20px;
+            font-family: sans-serif;
+        }
+        form {
+            width: 100%;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input {
+            width: 50%;
+            font-size: 20px;
+        }
+        select {
+            font-size: 20px;
+        }
+        #paces {
+            text-align: left;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+
+</head>
+
+<body>
+    <form>
+        <h1>Pace Calculator</h1>
+        <div>
+            <select id="hours">
+            </select>
+            <select id="minutes">
+            </select>
+            <select id="seconds">
+            </select>
+            <select id="distance">
+                <option>mile</option>
+                <option>3mile</option>
+                <option>5k</option>
+                <option>Half Marathon</option>
+                <option>Marathon</option>
+            </select> <br>
+            <input type="button" value="submit" onclick="submitForm()">
+       
+    </form>
+    <div id="paces">
+
+    </div>
+
+    <script>
+        // Based on mile time
+        //print out times
+        function submitForm() {
+            
+            document.getElementById("paces").innerHTML = "";
+            var hours = parseInt(document.getElementById("hours").value);
+            var minutes = parseInt(document.getElementById("minutes").value);
+            var seconds = parseInt(document.getElementById("seconds").value);
+            var toSeconds = (hours * 60 * 60) + (minutes * 60) + seconds;
+            var paceDiv = document.getElementById("paces");
+
+            //check distance
+            if(document.getElementById("distance").value == '3mile'){
+                toSeconds = toSeconds/3;
+                console.log("3mile");
+            }else if(document.getElementById("distance").value == '5k'){
+                toSeconds = toSeconds/3.10686;
+                console.log("5k");
+            }else if(document.getElementById("distance").value == 'Marathon'){
+                toSeconds = toSeconds/26.2;
+                console.log("Marathon");
+            }else if(document.getElementById("distance").value == 'Half Marathon'){
+                toSeconds = toSeconds/13.1;
+                console.log("Half Marathon");
+            }else{
+                
+            }
+           
+            for (var j = 100; j <= 1600; j += 100) {
+                if (j == 700 || j == 900 || j == 1500 || j == 1100 || j == 1300 || j == 1400) {
+                    //Skip these ones
+                } else {
+                    var element = document.createElement("P");
+                    var time = (j / 1600) * toSeconds;
+                    var toMinutes = parseInt(time / 60);
+                    var toSecondsAgain = time % 60;
+                    element.innerHTML = j + ": " + toMinutes + ":" + toSecondsAgain.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
+                    paceDiv.append(element);
+                }
+
+            }
+
+        }
+
+        //generate options hours
+        for (var i = 0; i < 60; i++) {
+            var option = document.createElement("OPTION");
+            i = i.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })// double digits
+            option.setAttribute("value", i);
+            option.innerHTML = i;
+            document.getElementById("hours").append(option);
+        }
+
+        //generate options minutes
+        for (var i = 0; i < 60; i++) {
+            var option = document.createElement("OPTION");
+            i = i.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })// double digits
+            option.setAttribute("value", i);
+            //for default but not being used
+            // if (i == 0) {
+            //     option.setAttribute("selected", "selected");
+            // }
+            option.innerHTML = i;
+            document.getElementById("minutes").append(option);
+        }
+
+        //generate options seconds
+        for (var i = 0; i < 60; i++) {
+            var option = document.createElement("OPTION");
+            i = i.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })
+            option.setAttribute("value", i);
+            option.innerHTML = i;
+            document.getElementById("seconds").append(option);
+        }
+
+    </script>
+    <!-- Service Worker -->
+    <script src="js/promise.js"></script>
+    <script src="js/fetch.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
